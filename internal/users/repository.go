@@ -2,40 +2,38 @@ package users
 
 import "gorm.io/gorm"
 
-type Repository struct {
+type repository struct {
 	db *gorm.DB
 }
 
-func NewRepository(db *gorm.DB) Repository {
-	return Repository{db: db}
+func NewRepository(db *gorm.DB) UserRepository {
+	return &repository{db: db}
 }
 
-func (r *Repository) GetAllUsers() ([]User, error) {
+func (r *repository) GetAllUsers() ([]User, error) {
 	var users []User
-	err := r.db.Find(&users).Error
-	return users, err
+	if err := r.db.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
-func (r *Repository) CreateUser(user *User) error {
-	return r.db.Create(user).Error
-}
-
-func (r *Repository) GetUserByID(id uint) (*User, error) {
+func (r *repository) GetUserByID(id uint) (*User, error) {
 	var user User
-	err := r.db.First(&user, id).Error
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, nil
-		}
+	if err := r.db.First(&user, id).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
 }
 
-func (r *Repository) UpdateUser(user *User) error {
+func (r *repository) CreateUser(user *User) error {
+	return r.db.Create(user).Error
+}
+
+func (r *repository) UpdateUser(user *User) error {
 	return r.db.Save(user).Error
 }
 
-func (r *Repository) DeleteUser(id uint) error {
+func (r *repository) DeleteUser(id uint) error {
 	return r.db.Delete(&User{}, id).Error
 }

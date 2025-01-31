@@ -1,27 +1,35 @@
 package users
 
-type Repo interface {
+// UserRepository определяет методы для работы с базой данных
+type UserRepository interface {
 	GetAllUsers() ([]User, error)
-	CreateUser(user *User) error
-}
-
-type Service interface {
-	GetAllUsers() ([]User, error)
-	CreateUser(user *User) error
 	GetUserByID(id uint) (*User, error)
+	CreateUser(user *User) error
 	UpdateUser(user *User) error
 	DeleteUser(id uint) error
 }
 
-type Context interface {
-	JSON(code int, obj interface{}) error
-	BindJSON(obj interface{}) error
+// UserService определяет бизнес-логику
+type UserService interface {
+	GetAllUsers() ([]User, error)
+	GetUserByID(id uint) (*User, error)
+	CreateUser(user *User) error
+	UpdateUser(user *User) error
+	DeleteUser(id uint) error
 }
 
-type Handler interface {
-	GetAllUsers(c Context)
-	CreateUser(c Context)
-	GetUserByID(c Context)
-	UpdateUser(c Context)
-	DeleteUser(c Context)
+// HTTPContext абстрагирует работу с HTTP-запросами
+type HTTPContext interface {
+	JSON(code int, obj interface{}) error
+	BindJSON(obj interface{}) error
+	Param(key string) string
+}
+
+// UserHandler определяет интерфейс для HTTP-обработчиков
+type UserHandler interface {
+	GetAllUsers(c HTTPContext)
+	CreateUser(c HTTPContext)
+	GetUserByID(c HTTPContext)
+	UpdateUser(c HTTPContext)
+	DeleteUser(c HTTPContext)
 }

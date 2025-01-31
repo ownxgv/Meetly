@@ -10,6 +10,11 @@ type GinContextAdapter struct {
 	C *gin.Context
 }
 
+func (g *GinContextAdapter) Param(key string) string {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (g *GinContextAdapter) JSON(code int, obj interface{}) error {
 	g.C.JSON(code, obj)
 	return nil
@@ -20,7 +25,7 @@ func (g *GinContextAdapter) BindJSON(obj interface{}) error {
 }
 
 type handlerForUsers struct {
-	service Service
+	service UserService
 }
 
 type Response struct {
@@ -28,7 +33,7 @@ type Response struct {
 }
 
 // NewHandler создаёт новый хендлер
-func NewHandler(service Service) Handler {
+func NewHandler(service UserService) UserHandler {
 	return &handlerForUsers{service: service}
 }
 
@@ -39,7 +44,7 @@ func NewHandler(service Service) Handler {
 // @Success 200 {array} users.User
 // @Failure 500 {object} Response
 // @Router /users [get]
-func (h *handlerForUsers) GetAllUsers(c Context) {
+func (h *handlerForUsers) GetAllUsers(c HTTPContext) {
 	users, err := h.service.GetAllUsers()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch users"})
@@ -57,7 +62,7 @@ func (h *handlerForUsers) GetAllUsers(c Context) {
 // @Success 201 {object} users.User
 // @Failure 400 {object} Response
 // @Router /users [post]
-func (h *handlerForUsers) CreateUser(c Context) {
+func (h *handlerForUsers) CreateUser(c HTTPContext) {
 	var user User
 	if err := c.BindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid input"})
@@ -78,8 +83,8 @@ func (h *handlerForUsers) CreateUser(c Context) {
 // @Success 200 {object} users.User
 // @Failure 404 {object} Response
 // @Router /users/{id} [get]
-func (h *handlerForUsers) GetUserByID(c Context) {
-	id, err := strconv.Atoi(c.(*GinContextAdapter).C.Param("id"))
+func (h *handlerForUsers) GetUserByID(c HTTPContext) {
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid user ID"})
 		return
@@ -106,8 +111,8 @@ func (h *handlerForUsers) GetUserByID(c Context) {
 // @Success 200 {object} users.User
 // @Failure 400 {object} Response
 // @Router /users/{id} [put]
-func (h *handlerForUsers) UpdateUser(c Context) {
-	id, err := strconv.Atoi(c.(*GinContextAdapter).C.Param("id"))
+func (h *handlerForUsers) UpdateUser(c HTTPContext) {
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid user ID"})
 		return
@@ -132,8 +137,8 @@ func (h *handlerForUsers) UpdateUser(c Context) {
 // @Success 204 {object} nil
 // @Failure 404 {object} Response
 // @Router /users/{id} [delete]
-func (h *handlerForUsers) DeleteUser(c Context) {
-	id, err := strconv.Atoi(c.(*GinContextAdapter).C.Param("id"))
+func (h *handlerForUsers) DeleteUser(c HTTPContext) {
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid user ID"})
 		return
