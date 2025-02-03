@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ua">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meetly</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header>
+        <section class="navigator">
+            <a href="https://www.google.com.ua/" class="SN">Meetly</a>
+            <section class="header">
+                <a class="HB1" href="https://www.google.com.ua/"><img src="/ip2/images/Group.png" alt=""></a>
+                <a class="HB1" href="https://www.google.com.ua/"><img src="/ip2/images/user.png" alt=""></a>
+            </section>
+        </section>
+    </header>
+    <main class="DRAD">
+        <section class="NI">
+            <div class="EN">
+                <h1>Назва заходу</h1>
+                <p class="NIp">короткий опис з головної сторінки</p>
+            </div>
+        </section>
+        <section class="B_GRAD">
+            <div class="slider">
+                <div class="slides" id="slides">
+                    <img src="/ip2/images/img1.png" alt="Slide 1">
+                    <img src="/ip2/images/img2.png" alt="Slide 2">
+                    <img src="/ip2/images/img3.png" alt="Slide 3">
+                </div>
+                <div class="navigation">
+                    <button id="prev">&#10094;</button>
+                    <button id="next">&#10095;</button>
+                </div>
+            </div>
+            
+            <div class="thumbnails">
+                <img src="/ip2/images/img1.png" alt="Thumbnail 1" data-index="0">
+                <img src="/ip2/images/img2.png" alt="Thumbnail 2" data-index="1">
+                <img src="/ip2/images/img3.png" alt="Thumbnail 3" data-index="2">
+            </div>
+            
+            <script>
+                const slides = document.getElementById('slides');
+                const images = slides.children.length;
+                let index = 0;
+            
+                const showSlide = (i) => {
+                    index = (i + images) % images; 
+                    slides.style.transform = `translateX(-${index * 860}px)`;
+                };
+            
+                document.getElementById('prev').addEventListener('click', () => showSlide(index - 1));
+                document.getElementById('next').addEventListener('click', () => showSlide(index + 1));
+            
+                const thumbnails = document.querySelectorAll('.thumbnails img');
+                thumbnails.forEach(thumbnail => {
+                    thumbnail.addEventListener('click', (e) => {
+                        const targetIndex = parseInt(e.target.getAttribute('data-index'));
+                        showSlide(targetIndex);
+                    });
+                });
+            </script>
+            <section class="disc">
+                <h2>детальний опис заходу</h2>
+                <p>Час</p>
+                <p>Місце</p>
+                <p>Деталі</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam, enim. Aperiam autem, molestias beatae ipsam animi iusto consequatur aliquid laborum, perspiciatis sit quo. Quis distinctio beatae obcaecati minima ducimus ea.</p>
+            </section>
+        </section>
+        <section>
+            <h3>Схожі заходи</h3>
+            <div class="card">
+                <div class="card1">
+                    <a href="https://www.google.com.ua/"><img class="" src="https://picsum.photos/404/346" alt=""></a>
+                    <a href="https://www.google.com.ua/"><p>Title</p></a>                    <p class="autor">Author</p>
+                </div>
+                <div>
+                    <a href="https://www.google.com.ua/"><img class="" src="https://picsum.photos/404/346" alt=""></a>
+                    <a href="https://www.google.com.ua/"><p>Title</p></a>                    <p class="autor">Author</p>
+                </div>
+                <div>
+                    <a href="https://www.google.com.ua/"><img class="" src="https://picsum.photos/404/346" alt=""></a>
+                    <a href="https://www.google.com.ua/"><p>Title</p></a>
+                    <p class="autor"> Author</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="FC">
+        <div>
+            <p class="fn">Meetly</p>
+        </div>
+        <nav class="navig">
+            <ul>
+              <li><a href="https://www.facebook.com/"><img src="/image/FB.png" alt=""></a></li>
+              <li><a href="https://ua.linkedin.com/"><img src="/image/Icon.png" alt=""></a></li>
+              <li><a href="https://www.instagram.com/"><img src="/image/INST.png" alt=""></a></li>
+              <li><a href="https://www.youtube.com/"><img src="/image/YT.png" alt=""></a></li>
+            </ul>
+          </nav>
+          <lists class="t1">
+            <ul>
+                <li>Topic</li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+            </ul>
+          </lists>         
+          <lists class="t2">
+            <ul>
+                <li>Topic</li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+            </ul>
+          </lists>
+          <lists class="t3">
+            <ul>
+                <li>Topic</li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+            </ul>
+          </lists>
+    </footer>
+</body>
+</html>

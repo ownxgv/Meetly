@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meetly</title>
+    <link rel="stylesheet" href="/registr/style.css">
+</head>
+<body>
+    <header>
+        <section class="HB">
+            <a class="Meetly" href="https://www.google.com.ua/">Meetly</a>
+            <a class="gmail" href="https://www.google.com.ua/"><img src="/registr/image/Group.png" alt="mail"></a>
+            <a class="pr" href="https://www.google.com.ua/"><img src="/registr/image/profile.png" alt="profile"></a>
+        </section>
+    </header>
+    <main>
+        <h1>Реєстрація</h1>
+        <form method="post">
+            <section class="mail">
+                <label>Електронна адреса</label>
+                <input id="signup-email" type="text" class="inp1" placeholder="example@gmail.com">
+            </section>
+            <section class="name">
+                <label>Логін</label>
+                <input type="text" id="signup-name" class="inp2" placeholder="Ім’я вашого профілю">
+            </section>
+            <section class="password">
+                <label>Пароль</label>
+                <label class="pt">не менше 6 символів, 1 цифра, 1 літера
+                    Короткий опис з головної сторінк</label>
+                <input id="signup-pass" type="password" class="inp3" placeholder="Введіть пароль">
+            </section>
+            <section class="rp">
+                <label>Повторіть пароль</label>
+                <input id="signup-repass" type="password" class="rpass" placeholder="Введіть пароль">
+            </section>
+            <section class="PIB">
+                <label>ПІБ</label>
+                <input id="signup-PIB" type="text" class="PIB1" placeholder="Прізвище Ім’я По-батькові">
+            </section>
+            <section class="date">
+                <label>Дата народження</label>
+                <input id="signup-birthday" type="date" class="date-input">
+            </section>
+            <section class="upload-container photo">
+                <label class="fotoP">Фото профілю</label>
+                <label for="file-input" class="camera-icon">
+                    <img id="button-image" src="/registr/image/Group 1.png" alt="Вибір фото">
+                </label>
+                <input  type="file" id="file-input" accept="image/*">
+                
+            </section>
+            <section>
+                <input type="submit" class="button" value="Створити профіль" id="signup-submit">
+            </section>
+        </form>
+        <script>
+            
+            document.getElementById('file-input').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+    
+                if (file) {
+                    // Перевірка, чи обраний файл є зображенням
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+    
+                        // Коли зображення завантажено, змінюємо джерело кнопки
+                        reader.onload = function(e) {
+                            const buttonImage = document.getElementById('button-image');
+                            buttonImage.src = e.target.result; // Оновлюємо джерело зображення
+                        };
+    
+                        reader.readAsDataURL(file); // Читаємо файл як Data URL
+                    } else {
+                        alert('Будь ласка, виберіть файл зображення.');
+                    }
+                }
+            });
+        </script>
+    </main>
+    <footer class="FC">
+        <div>
+            <p class="fn">Meetly</p>
+        </div>
+        <nav class="navig">
+            <ul>
+              <li><a href="https://www.facebook.com/"><img src="/image/FB.png" alt=""></a></li>
+              <li><a href="https://ua.linkedin.com/"><img src="/image/Icon.png" alt=""></a></li>
+              <li><a href="https://www.instagram.com/"><img src="/image/INST.png" alt=""></a></li>
+              <li><a href="https://www.youtube.com/"><img src="/image/YT.png" alt=""></a></li>
+            </ul>
+          </nav>
+          <lists class="t1">
+            <ul>
+                <li>Topic</li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+            </ul>
+          </lists>         
+          <lists class="t2">
+            <ul>
+                <li>Topic</li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+            </ul>
+          </lists>
+          <lists class="t3">
+            <ul>
+                <li>Topic</li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+            </ul>
+          </lists>
+    </footer>
+    <script src="/registr/script.js"></script>
+</body>
+</html>

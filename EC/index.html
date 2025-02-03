@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meetly</title>
+    <link rel="stylesheet" href="/EC/style.css">
+</head>
+<body>
+    <header>
+        <section class="HB">
+            <a class="Meetly" href="https://www.google.com.ua/">Meetly</a>
+            <a class="gmail" href="https://www.google.com.ua/"><img src="/registr/image/Group.png" alt="mail"></a>
+            <a class="pr" href="https://www.google.com.ua/"><img src="/registr/image/profile.png" alt="profile"></a>
+        </section>
+    </header>
+    <main>
+        <h1>Створіть захід</h1>
+        <form method="post" action="registr/singup.php">
+            <section class="mail">
+                <label>Назва заходу*</label>
+                <input id type="text" class="inp1" placeholder="Введіть назву вашого заходу">
+            </section>
+            <section class="name">
+                <label>Короткий опис*</label>
+                <input type="text" class="inp2" placeholder="Введіть короткий опис">
+            </section>
+            <section class="password">
+                <label>Повний опис</label>
+                 <textarea name="" id="" cols="30" rows="10" class="inp3" placeholder="Введіть детальний опис заходу"></textarea>
+            </section>
+            <section class="rp">
+                <label>Місто*</label>
+                <div class="search-container">
+                    <input type="text" id="cityInput" placeholder="Введіть місто...">
+                    <div class="dropdown" id="dropdown"></div>
+                </div>
+                <!-- <input type="text" class="rpass" placeholder="Місто"> -->
+            </section>
+            <section class="PIB">
+                <label>Точна адреса</label>
+                <input type="text" class="PIB1" placeholder="Введіть точну адресу">
+            </section>
+            <section class="age">
+                <label>Вікові обмеження</label>
+                <select class="age1"  name="pets" id="pet-select">
+                    <option value="0">Без обмежень</option>
+                    <option value="6">6+</option>
+                    <option value="12">12+</option>
+                    <option value="16">16+</option>
+                    <option value="18">18+</option>
+                  </select> 
+                </section>           
+            <section>
+                <input type="submit" class="button" value="Створити захід">
+            </section>
+            <section>
+                <div class="image-grid">
+                    <label class="IT">Додайте фото до вашого заходу</label>
+                    <div class="image-box" onclick="selectImage(0)"></div>
+                    <div class="image-box" onclick="selectImage(1)"></div>
+                    <div class="image-box" onclick="selectImage(2)"></div>
+                </div>
+            
+                <input type="file" id="file-input" style="display: none;" accept="image/*" onchange="uploadImage(event)">
+            </section>
+        </form>
+    </main>
+    <footer class="FC">
+        <div>
+            <p class="fn">Meetly</p>
+        </div>
+        <nav class="navig">
+            <ul>
+              <li><a href="https://www.facebook.com/"><img src="/image/FB.png" alt=""></a></li>
+              <li><a href="https://ua.linkedin.com/"><img src="/image/Icon.png" alt=""></a></li>
+              <li><a href="https://www.instagram.com/"><img src="/image/INST.png" alt=""></a></li>
+              <li><a href="https://www.youtube.com/"><img src="/image/YT.png" alt=""></a></li>
+            </ul>
+          </nav>
+          <lists class="t1">
+            <ul>
+                <li>Topic</li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+            </ul>
+          </lists>         
+          <lists class="t2">
+            <ul>
+                <li>Topic</li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+            </ul>
+          </lists>
+          <lists class="t3">
+            <ul>
+                <li>Topic</li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+                <li><a href="https://www.google.com.ua/">Page</a></li>
+            </ul>
+          </lists>
+    </footer>
+    <script src="/EC/script.js"></script>
+</body>
+</html>
