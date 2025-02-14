@@ -1,97 +1,107 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"meetly/config"
+	"meetly/internal/context"
 	"meetly/internal/meetings"
 	"meetly/internal/participants"
 	"meetly/internal/users"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
+// recoverFromPanic catches any panics and prevents the server from crashing
+func recoverFromPanic() {
+	if err := recover(); err != nil {
+		log.Fatalf("❌ Critical error: %v", err)
+	}
+}
+
 func main() {
-	// Подключение к базе данных
-	dsn := "host=localhost user=postgres password=yourpassword dbname=meetly port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+	// Catch unexpected panics
+	defer recoverFromPanic()
+
+	// Check if the port is already in use
+	port := "8080"
+	if isPortInUse(port) {
+		log.Fatalf("❌ Port %s is already in use. Try a different port.", port)
 	}
 
-	// Автоматические миграции
-	db.AutoMigrate(&users.User{}, &meetings.Meeting{}, &participants.Participant{})
+	// Initialize the database
+	log.Println("🔄 Connecting to the database...")
+	config.InitDB()
+	if config.DB == nil {
+		log.Fatalf("❌ Failed to connect to the database. Server stopped.")
+	}
+	log.Println("✅ Successfully connected to the database!")
 
-	// Инициализация зависимостей для пользователей
-	userRepo := users.NewRepository(db)
+	// Run database migrations
+	log.Println("🛠️ Running AutoMigrate...")
+	err := config.DB.AutoMigrate(&users.User{}, &meetings.Meeting{}, &participants.Participant{})
+	if err != nil {
+		log.Fatalf("❌ Migration failed: %v", err)
+	}
+	log.Println("✅ Migrations applied successfully!")
+
+	// 💾 Создаём объект database для передачи в сервисы
+	database := config.DB
+
+	// Initialize dependencies
+	userRepo := users.NewRepository(database)
 	userService := users.NewService(userRepo)
 	userHandler := users.NewHandler(userService)
 
-	// Инициализация зависимостей для встреч
-	meetingRepo := meetings.NewMeetingRepository(db)
+	meetingRepo := meetings.NewMeetingRepository(database)
 	meetingService := meetings.NewMeetingService(meetingRepo)
 	meetingHandler := meetings.NewHandler(meetingService)
 
-	// Инициализация зависимостей для участников
-	participantRepo := participants.NewParticipantRepository(db)
+	participantRepo := participants.NewParticipantRepository(database)
 	participantService := participants.NewParticipantService(participantRepo)
 	participantHandler := participants.NewParticipantHandler(participantService)
 
-	// Создание роутера Gin
+	// Set up routes
 	router := gin.Default()
 
-	// Маршруты для пользователей
+	// 📌 User routes
 	router.GET("/users", func(c *gin.Context) {
-		userHandler.GetAllUsers(&users.GinContextAdapter{C: c})
+		userHandler.GetAllUsers(&context.GinContextAdapter{C: c})
 	})
 	router.POST("/users", func(c *gin.Context) {
-		userHandler.CreateUser(&users.GinContextAdapter{C: c})
-	})
-	router.GET("/users/:id", func(c *gin.Context) {
-		userHandler.GetUserByID(&users.GinContextAdapter{C: c})
-	})
-	router.PUT("/users/:id", func(c *gin.Context) {
-		userHandler.UpdateUser(&users.GinContextAdapter{C: c})
-	})
-	router.DELETE("/users/:id", func(c *gin.Context) {
-		userHandler.DeleteUser(&users.GinContextAdapter{C: c})
+		userHandler.CreateUser(&context.GinContextAdapter{C: c})
 	})
 
-	// Маршруты для встреч
+	// 📌 Meeting routes
 	router.GET("/meetings", func(c *gin.Context) {
-		meetingHandler.GetAllMeetings(&meetings.GinContextAdapter{C: c})
+		meetingHandler.GetAllMeetings(&context.GinContextAdapter{C: c})
 	})
 	router.POST("/meetings", func(c *gin.Context) {
-		meetingHandler.CreateMeeting(&meetings.GinContextAdapter{C: c})
-	})
-	router.GET("/meetings/:id", func(c *gin.Context) {
-		meetingHandler.GetMeetingByID(&meetings.GinContextAdapter{C: c})
-	})
-	router.PUT("/meetings/:id", func(c *gin.Context) {
-		meetingHandler.UpdateMeeting(&meetings.GinContextAdapter{C: c})
-	})
-	router.DELETE("/meetings/:id", func(c *gin.Context) {
-		meetingHandler.DeleteMeeting(&meetings.GinContextAdapter{C: c})
+		meetingHandler.CreateMeeting(&context.GinContextAdapter{C: c})
 	})
 
-	// Маршруты для участников
+	// 📌 Participant routes
 	router.GET("/participants", func(c *gin.Context) {
-		participantHandler.GetAllParticipants(&participants.GinContextAdapter{C: c})
-	})
-	router.GET("/participants/meeting/:meeting_id", func(c *gin.Context) {
-		participantHandler.GetParticipantsByMeetingID(&participants.GinContextAdapter{C: c})
+		participantHandler.GetAllParticipants(&context.GinContextAdapter{C: c})
 	})
 	router.POST("/participants", func(c *gin.Context) {
-		participantHandler.AddParticipant(&participants.GinContextAdapter{C: c})
-	})
-	router.PUT("/participants/meeting/:meeting_id/user/:user_id", func(c *gin.Context) {
-		participantHandler.UpdateParticipantStatus(&participants.GinContextAdapter{C: c})
-	})
-	router.DELETE("/participants/meeting/:meeting_id/user/:user_id", func(c *gin.Context) {
-		participantHandler.RemoveParticipant(&participants.GinContextAdapter{C: c})
+		participantHandler.AddParticipant(&context.GinContextAdapter{C: c})
 	})
 
-	// Запуск сервера
-	log.Println("Server running on port 8080")
-	router.Run(":8080")
+	// 📌 Start the server with error handling
+	log.Printf("🚀 Server is running on port %s", port)
+	if err := router.Run(":" + port); err != nil {
+		log.Fatalf("❌ Error starting the server: %v", err)
+	}
+}
+
+// isPortInUse checks if the specified port is already occupied
+func isPortInUse(port string) bool {
+	conn, err := http.Get(fmt.Sprintf("http://localhost:%s", port))
+	if err == nil {
+		conn.Body.Close()
+		return true
+	}
+	return false
 }

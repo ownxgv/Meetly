@@ -1,5 +1,7 @@
 package users
 
+import "meetly/internal/context"
+
 // UserRepository определяет методы для работы с базой данных
 type UserRepository interface {
 	GetAllUsers() ([]User, error)
@@ -27,9 +29,9 @@ type HTTPContext interface {
 
 // UserHandler определяет интерфейс для HTTP-обработчиков
 type UserHandler interface {
-	GetAllUsers(c HTTPContext)
-	CreateUser(c HTTPContext)
-	GetUserByID(c HTTPContext)
-	UpdateUser(c HTTPContext)
-	DeleteUser(c HTTPContext)
+	GetAllUsers(c context.HTTPContext)
+	CreateUser(c context.HTTPContext)
+	GetUserByID(c context.HTTPContext)
+	UpdateUser(c context.HTTPContext)
+	DeleteUser(c context.HTTPContext)
 }

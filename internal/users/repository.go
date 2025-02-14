@@ -6,6 +6,7 @@ type repository struct {
 	db *gorm.DB
 }
 
+// NewRepository создаёт новый экземпляр UserRepository
 func NewRepository(db *gorm.DB) UserRepository {
 	return &repository{db: db}
 }
