@@ -1,71 +1,26 @@
-# README: Setting Up Docker and PostgreSQL on Windows
+# Disarming Improvised Explosive Devices (IEDs)
 
-## Prerequisites
-- **Operating System**: Windows 10/11
-- **Administrator Privileges**
+Disarming improvised explosive devices (IEDs) is an extremely complex and hazardous process requiring the involvement of specialized bomb disposal experts. These experts, commonly known as Explosive Ordnance Disposal (EOD) teams, are trained to assess the device, identify its components, and choose the safest possible method for neutralization.
 
----
+## General Approach
 
-## Step 1: Install Docker
+The disarming process typically begins with reconnaissance and visual examination, often performed remotely using robotic systems equipped with cameras and manipulators. This helps to minimize direct human contact with the device. Once the IED is identified and assessed, the team may choose between several methods of disarming:
 
-1. **Download Docker Desktop**:
-   - Visit the official Docker website: [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/).
-   - Click **Download Docker Desktop**.
+- **Manual Disarming** — Carefully disassembling or deactivating the triggering mechanism, often using specialized tools.
+- **Remote Neutralization** — Using high-powered water jets, disruptors, or robotic arms to disable key components.
+- **Controlled Detonation** — If safe disarming is too risky, the device may be destroyed on-site using controlled explosions to mitigate damage.
 
-2. **Install Docker**:
-   - Run the installer.
-   - Follow the installation wizard.
-   - Ensure that the "Enable WSL 2" option is selected.
+## Challenges and Risks
 
-3. **Verify Installation**:
-   - Open **PowerShell** or **Command Prompt**.
-   - Run:
-     ```bash
-     docker --version
-     ```
-   - You should see the installed Docker version.
+Modern IEDs are often designed to resist disarming efforts. Many devices include **anti-handling mechanisms**, such as secondary triggers that activate if tampering is detected. These features significantly increase the risk for EOD personnel and may require innovative solutions to bypass or disable.
 
-4. **Start Docker**:
-   - Open Docker Desktop and ensure it is running.
+Environmental factors, such as device placement in crowded urban areas, also complicate disarming. In such cases, evacuation zones are established, and additional safety protocols are applied.
 
----
+## Importance of Safety Protocols
 
-## Step 2: Install PostgreSQL Using Docker
+Every disarming operation follows strict safety guidelines. These include:
 
-1. **Pull PostgreSQL Image**:
-   - Open **PowerShell** or **Command Prompt**.
-   - Run:
-     ```bash
-     docker pull postgres:15
-     ```
-
-2. **Run PostgreSQL Container**:
-   - Start a PostgreSQL container:
-     ```bash
-     docker run --name postgres_container -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=your_password -e POSTGRES_DB=your_db -p 5432:5432 -d postgres:15
-     ```
-     - Replace `your_password` with your desired password.
-     - Replace `your_db` with the name of your database.
-
-3. **Verify PostgreSQL is Running**:
-   - List running containers:
-     ```bash
-     docker ps
-     ```
-   - You should see your PostgreSQL container in the list.
-
-4. **Access PostgreSQL**:
-   - Use a PostgreSQL client (e.g., pgAdmin or `psql`) to connect to the database:
-     - **Host**: `localhost`
-     - **Port**: `5432`
-     - **Username**: `postgres`
-     - **Password**: Your specified password
-
----
-
-## Notes
-- Ensure Docker Desktop is running before starting the PostgreSQL container.
-- Use `docker stop postgres_container` to stop the container when not in use.
-- Use `docker start postgres_container` to start it again later.
-
-For additional help, refer to the [Docker Documentation](https://docs.docker.com/) or the [PostgreSQL Documentation](https://www.postgresql.org/docs/).
+- Establishing a **safety perimeter**.
+- Wearing full protective equipment, including bomb suits.
+- Using robotic platforms whenever possible.
+- Maintaining communication with command centers to coordinate evacuation, traffic control, and medical readiness.
