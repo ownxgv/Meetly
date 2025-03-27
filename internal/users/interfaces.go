@@ -21,17 +21,17 @@ type UserService interface {
 }
 
 // HTTPContext абстрагирует работу с HTTP-запросами
-type HTTPContext interface {
-	JSON(code int, obj interface{}) error
-	BindJSON(obj interface{}) error
-	Param(key string) string
-}
+//type HTTPContext interface {
+//	JSON(code int, obj interface{}) error
+//	BindJSON(obj interface{}) error
+//	Param(key string) string
+//}
 
 // UserHandler определяет интерфейс для HTTP-обработчиков
 type UserHandler interface {
-	GetAllUsers(c context.HTTPContext)
-	CreateUser(c context.HTTPContext)
-	GetUserByID(c context.HTTPContext)
-	UpdateUser(c context.HTTPContext)
-	DeleteUser(c context.HTTPContext)
+	GetAllUsers(c context.Context)
+	CreateUser(c context.Context)
+	GetUserByID(c context.Context)
+	UpdateUser(c context.Context)
+	DeleteUser(c context.Context)
 }

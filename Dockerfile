@@ -1,3 +1,4 @@
+# Этап сборки
 FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
@@ -9,18 +10,14 @@ COPY . .
 
 RUN go build -o main ./cmd
 
+# Финальный контейнер
 FROM alpine:latest
 
 WORKDIR /root/
 
 COPY --from=builder /app/main .
 
-ENV DB_HOST=db
-ENV DB_PORT=5432
-ENV DB_USER=postgres
-ENV DB_PASSWORD=eternal
-ENV DB_NAME=meetly
-
-EXPOSE 8080
+# Порт, используемый Gin
+EXPOSE 5000
 
 CMD ["./main"]

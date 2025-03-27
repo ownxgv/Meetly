@@ -25,5 +25,6 @@ func (s *meetingService) UpdateMeeting(meeting *Meeting) error {
 }
 
 func (s *meetingService) DeleteMeeting(id uint) error {
+
 	return s.repo.DeleteMeeting(id)
 }
