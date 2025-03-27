@@ -2,14 +2,13 @@ package context
 
 import "github.com/gin-gonic/gin"
 
-// HTTPContext — интерфейс для обработки HTTP-запросов
-type HTTPContext interface {
+// Context — интерфейс для абстракции над gin.Context
+type Context interface {
 	JSON(code int, obj interface{}) error
 	BindJSON(obj interface{}) error
 	Param(key string) string
 }
 
-// GinContextAdapter — адаптер для работы с Gin
 type GinContextAdapter struct {
 	C *gin.Context
 }

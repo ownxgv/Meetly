@@ -3,6 +3,8 @@ package participants
 import (
 	"net/http"
 	"strconv"
+
+	appctx "meetly/internal/context"
 )
 
 type handler struct {
@@ -13,7 +15,7 @@ func NewParticipantHandler(service ParticipantService) ParticipantHandler {
 	return &handler{service: service}
 }
 
-func (h *handler) GetAllParticipants(c HTTPContext) {
+func (h *handler) GetAllParticipants(c appctx.Context) {
 	participants, err := h.service.GetAllParticipants()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch participants"})
@@ -22,12 +24,13 @@ func (h *handler) GetAllParticipants(c HTTPContext) {
 	c.JSON(http.StatusOK, participants)
 }
 
-func (h *handler) GetParticipantsByMeetingID(c HTTPContext) {
+func (h *handler) GetParticipantsByMeetingID(c appctx.Context) {
 	meetingID, err := strconv.Atoi(c.Param("meeting_id"))
-	if err != nil {
+	if err != nil || meetingID <= 0 {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid meeting ID"})
 		return
 	}
+
 	participants, err := h.service.GetParticipantsByMeetingID(uint(meetingID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch participants"})
@@ -36,7 +39,7 @@ func (h *handler) GetParticipantsByMeetingID(c HTTPContext) {
 	c.JSON(http.StatusOK, participants)
 }
 
-func (h *handler) AddParticipant(c HTTPContext) {
+func (h *handler) AddParticipant(c appctx.Context) {
 	var participant Participant
 	if err := c.BindJSON(&participant); err != nil {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid input"})
@@ -49,14 +52,14 @@ func (h *handler) AddParticipant(c HTTPContext) {
 	c.JSON(http.StatusCreated, participant)
 }
 
-func (h *handler) UpdateParticipantStatus(c HTTPContext) {
+func (h *handler) UpdateParticipantStatus(c appctx.Context) {
 	meetingID, err := strconv.Atoi(c.Param("meeting_id"))
-	if err != nil {
+	if err != nil || meetingID <= 0 {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid meeting ID"})
 		return
 	}
 	userID, err := strconv.Atoi(c.Param("user_id"))
-	if err != nil {
+	if err != nil || userID <= 0 {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid user ID"})
 		return
 	}
@@ -74,14 +77,14 @@ func (h *handler) UpdateParticipantStatus(c HTTPContext) {
 	c.JSON(http.StatusOK, map[string]string{"message": "Participant status updated"})
 }
 
-func (h *handler) RemoveParticipant(c HTTPContext) {
+func (h *handler) RemoveParticipant(c appctx.Context) {
 	meetingID, err := strconv.Atoi(c.Param("meeting_id"))
-	if err != nil {
+	if err != nil || meetingID <= 0 {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid meeting ID"})
 		return
 	}
 	userID, err := strconv.Atoi(c.Param("user_id"))
-	if err != nil {
+	if err != nil || userID <= 0 {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid user ID"})
 		return
 	}

@@ -16,7 +16,7 @@ func NewHandler(service UserService) UserHandler {
 }
 
 // GetAllUsers - получение всех пользователей
-func (h *handler) GetAllUsers(c context.HTTPContext) {
+func (h *handler) GetAllUsers(c context.Context) {
 	users, err := h.service.GetAllUsers()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch users"})
@@ -26,7 +26,7 @@ func (h *handler) GetAllUsers(c context.HTTPContext) {
 }
 
 // CreateUser - создание нового пользователя
-func (h *handler) CreateUser(c context.HTTPContext) {
+func (h *handler) CreateUser(c context.Context) {
 	var user User
 	if err := c.BindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid input"})
@@ -40,9 +40,9 @@ func (h *handler) CreateUser(c context.HTTPContext) {
 }
 
 // GetUserByID - получение пользователя по ID
-func (h *handler) GetUserByID(c context.HTTPContext) {
+func (h *handler) GetUserByID(c context.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
+	if err != nil || id <= 0 {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid user ID"})
 		return
 	}
@@ -51,7 +51,7 @@ func (h *handler) GetUserByID(c context.HTTPContext) {
 		c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch user"})
 		return
 	}
-	if user == nil {
+	if user == nil || user.UserID == 0 {
 		c.JSON(http.StatusNotFound, map[string]string{"error": "User not found"})
 		return
 	}
@@ -59,18 +59,21 @@ func (h *handler) GetUserByID(c context.HTTPContext) {
 }
 
 // UpdateUser - обновление данных пользователя
-func (h *handler) UpdateUser(c context.HTTPContext) {
+func (h *handler) UpdateUser(c context.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
+	if err != nil || id <= 0 {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid user ID"})
 		return
 	}
+
 	var user User
 	if err := c.BindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid input"})
 		return
 	}
-	user.UserID = int64(id)
+
+	user.UserID = int64(id) // Привязка ID из URL
+
 	if err := h.service.UpdateUser(&user); err != nil {
 		c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update user"})
 		return
@@ -79,15 +82,17 @@ func (h *handler) UpdateUser(c context.HTTPContext) {
 }
 
 // DeleteUser - удаление пользователя
-func (h *handler) DeleteUser(c context.HTTPContext) {
+func (h *handler) DeleteUser(c context.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
+	if err != nil || id <= 0 {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid user ID"})
 		return
 	}
+
 	if err := h.service.DeleteUser(uint(id)); err != nil {
 		c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to delete user"})
 		return
 	}
+
 	c.JSON(http.StatusNoContent, nil)
 }
